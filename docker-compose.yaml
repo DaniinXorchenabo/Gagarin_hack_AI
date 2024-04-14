@@ -1,0 +1,61 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+  nginx:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '82:82'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
+  app:
+    build:
+      context: .
+      dockerfile: backend/docker/no.neural.Dockerfile
+    image: daniinxorchenabo/gagarin_hack_small_with_server:latest
+    ports:
+      - '8080:8080'
+    restart: always
+    environment:
+      - CONFIG=ru_odqa_infer_wiki
+      - "PROJECT_ROOT_DIR=/workspace/project"
+    volumes:
+      - ./backend:/workspace/project
+      - ./certs:/workspace/project/certs
+      - ./neural:/workspace/project/neural
+      - ./neural/deeppavlov/cache:/root/.cache
+    networks:
+      - backend
+
+  redis:
+    image: redis:latest
+    restart: always
+    networks:
+      - backend
+    ports:
+      - "6379:6379"
+    volumes:
+      - /path/to/local/dаta:/root/redis
+      - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=my-password
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=16
+
+networks:
+  backend:
+    driver: bridge

@@ -1,0 +1,18 @@
+--extra-index-url https://download.pytorch.org/whl/cu118
+--extra-index-url https://pypi.ngc.nvidia.com
+--extra-index-url https://pypi.org/simple
+deeppavlov==1.6.0
+spacy
+torch==1.13.1
+nvidia-cudnn-cu11==8.5.0.96
+nvidia-cublas-cu11==11.10.3.66
+nvidia-cuda-nvrtc-cu11==11.7.99
+transformers==4.30.0
+pymorphy3-dicts-ru
+certifi
+nltk
+navec
+natasha
+yargy
+razdel
+python-dotenv
